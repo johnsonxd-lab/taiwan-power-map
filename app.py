@@ -163,8 +163,8 @@ if not df.empty:
     metrics_html = f'''
     <div style="
         position: fixed; 
-        top: 40px; 
-        left: 30%; 
+        top: 50px; 
+        left: 10%; 
         transform: translateX(-50%);
         z-index: 9999; 
         background-color: rgba(20, 20, 20, 0.7); 
@@ -304,5 +304,6 @@ if not df.empty:
 
 else:
     st.error("目前無法取得台電資料，請稍後重試。")
+
 
 
