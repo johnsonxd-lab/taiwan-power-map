@@ -104,7 +104,7 @@ def fetch_data():
         return pd.DataFrame()
 
 # --- 3. 主程式介面 ---
-st.title("⚡ 台灣電力即時戰情室 (V9)")
+st.title("⚡ 台灣電力即時戰情室 (V9)⚡")
 tw_time = datetime.now(pytz.timezone('Asia/Taipei')).strftime("%Y-%m-%d %H:%M:%S")
 
 col1, col2 = st.columns([3, 1])
@@ -217,3 +217,4 @@ if not df.empty:
 
 else:
     st.error("目前無法取得台電資料，請稍後重試。")
+
