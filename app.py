@@ -4,6 +4,7 @@ from streamlit_folium import st_folium
 import requests
 import pandas as pd
 import urllib3
+import json # 記得確保有 import json
 from datetime import datetime
 import pytz
 
@@ -11,7 +12,7 @@ import pytz
 st.set_page_config(page_title="台灣電力即時戰情室", layout="wide", page_icon="⚡")
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# --- 1. 核心數據與設定 (保留 V9 邏輯) ---
+# --- 1. 核心數據與設定 ---
 location_dict = {
     # === 核能 ===
     "核一": [25.289, 121.589], "核二": [25.201, 121.666], "核三": [21.958, 120.752],
@@ -78,7 +79,13 @@ def fetch_data():
     try:
         url = "https://service.taipower.com.tw/data/opendata/apply/file/d006001/001.json"
         response = requests.get(url, verify=False)
-        data = response.json()
+        
+        # 【關鍵修正】使用 utf-8-sig 處理 BOM
+        try:
+            data = json.loads(response.content.decode('utf-8-sig'))
+        except:
+            data = json.loads(response.content.decode('utf-8'))
+            
         raw_list = data['aaData'] if isinstance(data, dict) and 'aaData' in data else data
         df = pd.DataFrame(raw_list)
         
@@ -169,7 +176,6 @@ if not df.empty:
         ).add_to(m)
 
     # --- 圓餅圖與圖例 (HTML 注入) ---
-    # 計算百分比
     pcts = {}
     if total_gen > 0:
         for k, v in stats.items(): pcts[k] = (v / total_gen) * 100
